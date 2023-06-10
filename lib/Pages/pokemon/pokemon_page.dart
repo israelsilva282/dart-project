@@ -7,7 +7,7 @@ class Pokemon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("PokeHOME"),
+        title: const Text("Pokemon"),
       ),
     );
   }
