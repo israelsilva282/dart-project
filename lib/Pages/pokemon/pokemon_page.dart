@@ -1,3 +1,4 @@
+import 'package:dartproject/Components/appBar/appbar_component.dart';
 import 'package:flutter/material.dart';
 
 class Pokemon extends StatelessWidget {
@@ -5,10 +6,8 @@ class Pokemon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Pokemon"),
-      ),
+    return const Scaffold(
+      appBar: MyAppBar(title: "Pokemon"),
     );
   }
 }
