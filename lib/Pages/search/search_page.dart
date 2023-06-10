@@ -1,3 +1,4 @@
+import 'package:dartproject/Components/appBar/appbar_component.dart';
 import 'package:flutter/material.dart';
 
 class Search extends StatelessWidget {
@@ -5,10 +6,8 @@ class Search extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Search"),
-      ),
+    return const Scaffold(
+      appBar: MyAppBar(title: "Search"),
     );
   }
 }
