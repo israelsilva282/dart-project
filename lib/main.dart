@@ -1,3 +1,6 @@
+import 'package:dartproject/Pages/home/home_page.dart';
+import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
+import 'package:dartproject/Pages/search/search_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -10,9 +13,16 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: "PokeDex",
+      theme: ThemeData(primarySwatch: Colors.red),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const Home(),
+        '/search': (context) => const Search(),
+        '/pokemon': (context) => const Pokemon()
+      },
     );
   }
 }
