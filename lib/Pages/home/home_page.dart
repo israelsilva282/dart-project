@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartproject/Components/appBar/appbar_component.dart';
+import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -50,6 +51,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       appBar: MyAppBar(title: "PokeHome"),
+      bottomNavigationBar: MyBottomNavbar(),
     );
   }
 }
