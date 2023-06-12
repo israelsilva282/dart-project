@@ -64,8 +64,12 @@ class Home extends StatelessWidget {
         builder: (context, pokemons, child) {
           return ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: pokemons.length,
+              itemCount: pokemons.length + 1,
               itemBuilder: (context, index) {
+                if (index == pokemons.length) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
                 var pokemon = pokemons[index];
 
                 return Center(
