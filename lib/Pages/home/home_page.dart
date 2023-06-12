@@ -62,19 +62,39 @@ class Home extends StatelessWidget {
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
           return ListView.builder(
-            itemCount: pokemons.length,
-            itemBuilder: (context, index) {
-              var pokemon = pokemons[index];
-              return ListTile(
-                title: Text(pokemon['name']),
-                subtitle: Text('ID: ${pokemon['id']}'),
-                leading: Image.network(pokemon['sprites']['front_default']),
-              );
-            },
-          );
+              padding: const EdgeInsets.all(16),
+              itemCount: pokemons.length,
+              itemBuilder: (context, index) {
+                var pokemon = pokemons[index];
+
+                return Center(
+                  child: Card(
+                    shape: const StadiumBorder(
+                        side: BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    )),
+                    margin: const EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          onTap: () {
+                            Navigator.pushNamed(context, '/pokemon');
+                          },
+                          title: Text(pokemon['name']),
+                          subtitle: Text(pokemon['id'].toString()),
+                          leading: Image(
+                              image: NetworkImage(
+                                  pokemon['sprites']['front_default'])),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
         },
       ),
-      bottomNavigationBar: MyBottomNavbar(),
+      bottomNavigationBar: const MyBottomNavbar(),
     );
   }
 }
