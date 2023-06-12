@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const Home(),
         '/search': (context) => const Search(),
-        '/pokemon': (context) => const Pokemon()
+        '/pokemon': (context) => const Pokemon(pokemon: null)
       },
     );
   }

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
+import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -79,7 +80,11 @@ class Home extends StatelessWidget {
                       children: <Widget>[
                         ListTile(
                           onTap: () {
-                            Navigator.pushNamed(context, '/pokemon');
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Pokemon(pokemon: pokemon)));
                           },
                           title: Text(pokemon['name']),
                           subtitle: Text(pokemon['id'].toString()),
