@@ -72,6 +72,9 @@ class Home extends StatelessWidget {
 
                 var pokemon = pokemons[index];
 
+                var pokemonImg = pokemon['sprites']['versions']['generation-v']
+                    ['black-white']['animated']['front_default'];
+
                 return Center(
                   child: Card(
                     shape: const StadiumBorder(
@@ -93,8 +96,9 @@ class Home extends StatelessWidget {
                           title: Text(pokemon['name']),
                           subtitle: Text(pokemon['id'].toString()),
                           leading: Image(
-                              image: NetworkImage(
-                                  pokemon['sprites']['front_default'])),
+                              width: 100,
+                              height: 600,
+                              image: NetworkImage(pokemonImg)),
                         )
                       ],
                     ),
