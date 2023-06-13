@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
+import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -62,19 +63,54 @@ class Home extends StatelessWidget {
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
           return ListView.builder(
-            itemCount: pokemons.length,
-            itemBuilder: (context, index) {
-              var pokemon = pokemons[index];
-              return ListTile(
-                title: Text(pokemon['name']),
-                subtitle: Text('ID: ${pokemon['id']}'),
-                leading: Image.network(pokemon['sprites']['front_default']),
-              );
-            },
-          );
+              padding: const EdgeInsets.all(16),
+              itemCount: pokemons.length + 1,
+              itemBuilder: (context, index) {
+                if (index == pokemons.length) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                var pokemon = pokemons[index];
+
+                var pokemonImg = pokemon['sprites']['front_default'];
+
+                return Center(
+                  child: Card(
+                    shape: const StadiumBorder(
+                        side: BorderSide(
+                      color: Colors.black,
+                      width: 1.0,
+                    )),
+                    margin: const EdgeInsets.all(16),
+                    child: Column(
+                      children: <Widget>[
+                        ListTile(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Pokemon(pokemon: pokemon)));
+                          },
+                          title: Text(pokemon['name']),
+                          subtitle: Text(pokemon['id'].toString()),
+                          leading: Image(
+                              width: 100,
+                              height: 600,
+                              image: NetworkImage(pokemonImg)),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              });
         },
       ),
-      bottomNavigationBar: MyBottomNavbar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
+      floatingActionButton: const Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: MyBottomNavbar(),
+      ),
     );
   }
 }
