@@ -72,8 +72,7 @@ class Home extends StatelessWidget {
 
                 var pokemon = pokemons[index];
 
-                var pokemonImg = pokemon['sprites']['versions']['generation-v']
-                    ['black-white']['animated']['front_default'];
+                var pokemonImg = pokemon['sprites']['front_default'];
 
                 return Center(
                   child: Card(
