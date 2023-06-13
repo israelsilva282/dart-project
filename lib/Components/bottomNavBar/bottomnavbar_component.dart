@@ -10,13 +10,11 @@ class MyBottomNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-        onTap: (index) {
-          _navigate(index, context);
-        },
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "home"),
-          BottomNavigationBarItem(icon: Icon(Icons.search), label: "search")
-        ]);
+    return FloatingActionButton(
+      onPressed: () {
+        Navigator.pushNamed(context, '/');
+      },
+      child: const Icon(Icons.search),
+    );
   }
 }

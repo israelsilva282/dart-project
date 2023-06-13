@@ -107,7 +107,11 @@ class Home extends StatelessWidget {
               });
         },
       ),
-      bottomNavigationBar: const MyBottomNavbar(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
+      floatingActionButton: const Padding(
+        padding: EdgeInsets.only(bottom: 10),
+        child: MyBottomNavbar(),
+      ),
     );
   }
 }
