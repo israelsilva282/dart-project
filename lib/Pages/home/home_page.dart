@@ -103,19 +103,26 @@ class _HomeState extends State<Home> {
       body: ValueListenableBuilder<List<dynamic>>(
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
+          if (pokemons.isEmpty) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+
           return ListView.builder(
-            controller: _scrollController, // Adiciona o ScrollController
+            controller: _scrollController,
             padding: const EdgeInsets.all(16),
             itemCount: pokemons.length + 1,
             itemBuilder: (context, index) {
               if (index == pokemons.length) {
                 return _isLoading
-                    ? const Center(child: CircularProgressIndicator())
-                    : Container(); // Não exibe nada quando não estiver carregando
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : Container();
               }
 
               var pokemon = pokemons[index];
-
               var pokemonImg = pokemon['sprites']['front_default'];
 
               return Center(
