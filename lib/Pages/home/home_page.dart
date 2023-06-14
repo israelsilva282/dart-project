@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
           if (pokemons.isEmpty) {
-            return Center(
+            return const Center(
               child: CircularProgressIndicator(),
             );
           }
