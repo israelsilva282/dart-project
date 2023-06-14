@@ -9,18 +9,21 @@ class DataService {
   final ValueNotifier<List<dynamic>> tableStateNotifier = ValueNotifier([]);
   final ValueNotifier<List<String>> propertyNamesNotifier = ValueNotifier([]);
 
+  int limit = 20; // Quantidade inicial de itens a serem carregados
+  int offset = 0; // Deslocamento inicial dos itens
+
   DataService() {
     loadPokemons();
   }
 
-  Future<void> loadPokemons({int limit = 10}) async {
+  Future<void> loadPokemons() async {
     var pokeUri = Uri(
       scheme: 'https',
       host: 'pokeapi.co',
       path: 'api/v2/pokemon/',
       queryParameters: {
         'limit': limit.toString(),
-        'offset': '0',
+        'offset': offset.toString(),
       },
     );
 
@@ -42,7 +45,9 @@ class DataService {
         }
       }
 
-      tableStateNotifier.value = pokemons;
+      offset += limit; // Aumenta o deslocamento para carregar mais itens
+      tableStateNotifier.value +=
+          pokemons; // Adiciona os novos itens à lista existente
     } else {
       print(
           'Falha ao carregar os pokémons. Código de status: ${response.statusCode}');
@@ -52,8 +57,44 @@ class DataService {
 
 final dataService = DataService();
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
+
+  @override
+  _HomeState createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (!_isLoading) {
+        setState(() {
+          _isLoading = true;
+        });
+        dataService.loadPokemons().then((_) {
+          setState(() {
+            _isLoading = false;
+          });
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,47 +104,54 @@ class Home extends StatelessWidget {
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
           return ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: pokemons.length + 1,
-              itemBuilder: (context, index) {
-                if (index == pokemons.length) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            controller: _scrollController, // Adiciona o ScrollController
+            padding: const EdgeInsets.all(16),
+            itemCount: pokemons.length + 1,
+            itemBuilder: (context, index) {
+              if (index == pokemons.length) {
+                return _isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : Container(); // Não exibe nada quando não estiver carregando
+              }
 
-                var pokemon = pokemons[index];
+              var pokemon = pokemons[index];
 
-                var pokemonImg = pokemon['sprites']['front_default'];
+              var pokemonImg = pokemon['sprites']['front_default'];
 
-                return Center(
-                  child: Card(
-                    shape: const StadiumBorder(
-                        side: BorderSide(
+              return Center(
+                child: Card(
+                  shape: const StadiumBorder(
+                    side: BorderSide(
                       color: Colors.black,
                       width: 1.0,
-                    )),
-                    margin: const EdgeInsets.all(16),
-                    child: Column(
-                      children: <Widget>[
-                        ListTile(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        Pokemon(pokemon: pokemon)));
-                          },
-                          title: Text(pokemon['name']),
-                          subtitle: Text(pokemon['id'].toString()),
-                          leading: Image(
-                              width: 100,
-                              height: 600,
-                              image: NetworkImage(pokemonImg)),
-                        )
-                      ],
                     ),
                   ),
-                );
-              });
+                  margin: const EdgeInsets.all(16),
+                  child: Column(
+                    children: <Widget>[
+                      ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => Pokemon(pokemon: pokemon),
+                            ),
+                          );
+                        },
+                        title: Text(pokemon['name']),
+                        subtitle: Text(pokemon['id'].toString()),
+                        leading: Image(
+                          width: 100,
+                          height: 600,
+                          image: NetworkImage(pokemonImg),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
         },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
