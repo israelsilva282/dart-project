@@ -1,4 +1,5 @@
 import 'package:dartproject/Components/appBar/appbar_component.dart';
+import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class Pokemon extends StatelessWidget {
@@ -29,14 +30,17 @@ class Pokemon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: pokemon['name'].toUpperCase()),
+        appBar: MyAppBar(
+          title: pokemon['name'].toUpperCase(),
+        ),
         body: ListView(
           children: [
             Center(
               child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                      color: Types()
+                          .pokemonColor(pokemon['types'][0]['type']['name']),
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(25),
                           bottomRight: Radius.circular(25))),
                   child: Column(
