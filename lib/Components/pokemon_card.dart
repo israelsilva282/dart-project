@@ -24,15 +24,17 @@ class PokemonCard extends StatelessWidget {
                   .pokemonColor(pokemon['types'][0]['type']['name'])
                   .withOpacity(0.8)),
           child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(10),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(FirstLetterUp().toFirstUpperCase(pokemon['name'])),
+                      Text(
+                        FirstLetterUp().toFirstUpperCase(pokemon['name']),
+                        style: const TextStyle(fontSize: 18),
+                      ),
                       Text(pokemon['id'].toString())
                     ],
                   ),
@@ -41,23 +43,20 @@ class PokemonCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(
-                              padding: const EdgeInsets.all(6),
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: pokemon['types']
-                                      .map<Widget>((e) => Container(
-                                          margin: const EdgeInsets.only(top: 8),
-                                          padding: const EdgeInsets.all(8),
-                                          decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              color: Colors.white
-                                                  .withOpacity(0.6)),
-                                          child: Text(FirstLetterUp()
-                                              .toFirstUpperCase(
-                                                  e['type']['name']))))
-                                      .toList()))
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: pokemon['types']
+                                  .map<Widget>((e) => Container(
+                                      margin: const EdgeInsets.only(top: 8),
+                                      padding: const EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          color: Colors.white.withOpacity(0.6)),
+                                      child: Text(FirstLetterUp()
+                                          .toFirstUpperCase(
+                                              e['type']['name']))))
+                                  .toList())
                         ],
                       ),
                       Flexible(
