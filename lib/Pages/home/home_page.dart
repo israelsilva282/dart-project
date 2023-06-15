@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
-import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
-import 'package:dartproject/Utils/first_letter_up.dart';
-import 'package:dartproject/Utils/myColors.dart';
+import 'package:dartproject/Components/pokemon_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -134,123 +132,8 @@ class _HomeState extends State<Home> {
               }
 
               var pokemon = pokemons[index];
-              var pokemonImg = pokemon['sprites']['other']['official-artwork']
-                  ['front_default'];
-              var type = pokemon['types'][0]['type']['name'];
-              return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Pokemon(pokemon: pokemon),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Types().pokemonColor(type).withOpacity(0.8)),
-                    child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(FirstLetterUp()
-                                    .toFirstUpperCase(pokemon['name'])),
-                                Text(pokemon['id'].toString())
-                              ],
-                            ),
-                            Row(
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Padding(
-                                        padding: const EdgeInsets.all(6),
-                                        child: Column(
-                                          children: [
-                                            if (pokemon['types'].length > 1)
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              top: 8),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          color: Colors.white
-                                                              .withOpacity(
-                                                                  0.6)),
-                                                      child: Text(FirstLetterUp()
-                                                          .toFirstUpperCase(
-                                                              pokemon['types']
-                                                                          [0]
-                                                                      ['type']
-                                                                  ['name']))),
-                                                  Container(
-                                                      margin:
-                                                          const EdgeInsets.only(
-                                                              top: 8),
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              8),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          color: Colors.white
-                                                              .withOpacity(
-                                                                  0.6)),
-                                                      child: Text(FirstLetterUp()
-                                                          .toFirstUpperCase(
-                                                              pokemon['types']
-                                                                          [0]
-                                                                      ['type']
-                                                                  ['name']))),
-                                                ],
-                                              )
-                                            else
-                                              Container(
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 8),
-                                                  padding:
-                                                      const EdgeInsets.all(8),
-                                                  decoration: BoxDecoration(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                      color: Colors.white
-                                                          .withOpacity(0.6)),
-                                                  child: Text(FirstLetterUp()
-                                                      .toFirstUpperCase(
-                                                          pokemon['types'][0]
-                                                                  ['type']
-                                                              ['name']))),
-                                          ],
-                                        ))
-                                  ],
-                                ),
-                                Flexible(
-                                    child: Image(
-                                  image: NetworkImage(pokemonImg),
-                                  width: 100,
-                                ))
-                              ],
-                            )
-                          ],
-                        )),
-                  ));
+
+              return PokemonCard(pokemon: pokemon);
             }),
           );
         },
