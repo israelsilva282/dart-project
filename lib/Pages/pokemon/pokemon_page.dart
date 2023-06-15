@@ -1,4 +1,4 @@
-import 'package:dartproject/Components/appBar/appbar_component.dart';
+import 'package:dartproject/Utils/first_letter_up.dart';
 import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +8,7 @@ class Pokemon extends StatelessWidget {
       Container(
           padding: const EdgeInsets.all(10),
           child: Text(
-            title.toString().toUpperCase(),
+            FirstLetterUp().toFirstUpperCase(title),
             textAlign: TextAlign.end,
             style: const TextStyle(
               fontSize: 16,
@@ -18,7 +18,7 @@ class Pokemon extends StatelessWidget {
       Container(
           padding: const EdgeInsets.all(10),
           child: Text(
-            description.toString().toUpperCase(),
+            FirstLetterUp().toFirstUpperCase(description.toString()),
             style: const TextStyle(fontSize: 16),
           )),
     ]);
@@ -30,8 +30,11 @@ class Pokemon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(
-          title: pokemon['name'].toUpperCase(),
+        appBar: AppBar(
+          title: Text(pokemon['name']),
+          elevation: 0,
+          backgroundColor:
+              Types().pokemonColor(pokemon['types'][0]['type']['name']),
         ),
         body: ListView(
           children: [
@@ -63,15 +66,12 @@ class Pokemon extends StatelessWidget {
                               _newRow('id', pokemon['id']),
                               _newRow(
                                   'Habilidade',
-                                  pokemon['abilities'][0]['ability']['name'] +
-                                      " " +
-                                      pokemon['abilities'][1]['ability']
-                                          ['name']),
+                                  pokemon['abilities']
+                                      .map((e) => e['ability']['name'])),
                               _newRow(
                                   'Tipo',
-                                  pokemon['types'][0]['type']['name'] +
-                                      " " +
-                                      pokemon['types'][1]['type']['name']),
+                                  pokemon['types']
+                                      .map((e) => e['type']['name'])),
                               _newRow('hp', pokemon['stats'][0]['base_stat']),
                               _newRow(
                                   'ataque', pokemon['stats'][1]['base_stat']),

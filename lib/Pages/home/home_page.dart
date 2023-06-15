@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
 import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
+import 'package:dartproject/Utils/first_letter_up.dart';
 import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -158,7 +159,8 @@ class _HomeState extends State<Home> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(pokemon['name']),
+                                Text(FirstLetterUp()
+                                    .toFirstUpperCase(pokemon['name'])),
                                 Text(pokemon['id'].toString())
                               ],
                             ),
@@ -180,8 +182,10 @@ class _HomeState extends State<Home> {
                                                     .withOpacity(0.6)),
                                             child: Padding(
                                               padding: const EdgeInsets.all(6),
-                                              child: Text(pokemon['types'][0]
-                                                  ['type']['name']),
+                                              child: Text(FirstLetterUp()
+                                                  .toFirstUpperCase(
+                                                      pokemon['types'][0]
+                                                          ['type']['name'])),
                                             )))
                                   ],
                                 ),
