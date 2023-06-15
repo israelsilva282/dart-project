@@ -1,4 +1,5 @@
-import 'package:dartproject/Components/appBar/appbar_component.dart';
+import 'package:dartproject/Utils/first_letter_up.dart';
+import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class Pokemon extends StatelessWidget {
@@ -7,7 +8,7 @@ class Pokemon extends StatelessWidget {
       Container(
           padding: const EdgeInsets.all(10),
           child: Text(
-            title.toString().toUpperCase(),
+            FirstLetterUp().toFirstUpperCase(title),
             textAlign: TextAlign.end,
             style: const TextStyle(
               fontSize: 16,
@@ -17,7 +18,7 @@ class Pokemon extends StatelessWidget {
       Container(
           padding: const EdgeInsets.all(10),
           child: Text(
-            description.toString().toUpperCase(),
+            FirstLetterUp().toFirstUpperCase(description.toString()),
             style: const TextStyle(fontSize: 16),
           )),
     ]);
@@ -29,14 +30,20 @@ class Pokemon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: MyAppBar(title: pokemon['name'].toUpperCase()),
+        appBar: AppBar(
+          title: Text(pokemon['name']),
+          elevation: 0,
+          backgroundColor:
+              Types().pokemonColor(pokemon['types'][0]['type']['name']),
+        ),
         body: ListView(
           children: [
             Center(
               child: Container(
-                  decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                      color: Types()
+                          .pokemonColor(pokemon['types'][0]['type']['name']),
+                      borderRadius: const BorderRadius.only(
                           bottomLeft: Radius.circular(25),
                           bottomRight: Radius.circular(25))),
                   child: Column(
@@ -57,22 +64,43 @@ class Pokemon extends StatelessWidget {
                           child: Table(
                             children: [
                               _newRow('id', pokemon['id']),
-                              _newRow(
-                                  'Habilidade',
-                                  pokemon['abilities'][0]['ability']['name'] +
-                                      " " +
-                                      pokemon['abilities'][1]['ability']
-                                          ['name']),
-                              _newRow(
-                                  'Tipo',
-                                  pokemon['types'][0]['type']['name'] +
-                                      " " +
-                                      pokemon['types'][1]['type']['name']),
+                              if (pokemon['abilities'].length > 1)
+                                _newRow(
+                                    'Habilidade',
+                                    FirstLetterUp().toFirstUpperCase(
+                                            pokemon['abilities'][0]['ability']
+                                                ['name']) +
+                                        ", ".toString() +
+                                        FirstLetterUp().toFirstUpperCase(
+                                            pokemon['abilities'][1]['ability']
+                                                ['name'])),
+                              if (pokemon['abilities'].length == 1)
+                                _newRow(
+                                    'Habilidade',
+                                    FirstLetterUp().toFirstUpperCase(
+                                        pokemon['abilities'][0]['ability']
+                                            ['name'])),
+                              if (pokemon['types'].length > 1)
+                                _newRow(
+                                    'Tipo',
+                                    FirstLetterUp().toFirstUpperCase(
+                                            pokemon['types'][0]['type']
+                                                ['name']) +
+                                        ", ".toString() +
+                                        FirstLetterUp().toFirstUpperCase(
+                                            pokemon['types'][1]['type']
+                                                ['name'])),
+                              if (pokemon['types'].length == 1)
+                                _newRow(
+                                    'Tipo',
+                                    FirstLetterUp().toFirstUpperCase(
+                                        pokemon['types'][0]['type']['name'])),
                               _newRow('hp', pokemon['stats'][0]['base_stat']),
                               _newRow(
                                   'ataque', pokemon['stats'][1]['base_stat']),
-                              _newRow(
-                                  'defesa', pokemon['stats'][2]['base_stat']),
+                              if (pokemon['types'].length > 1)
+                                _newRow(
+                                    'defesa', pokemon['stats'][2]['base_stat']),
                               _newRow('ataque especial',
                                   pokemon['stats'][3]['base_stat']),
                               _newRow('defesa especial',

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
-import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
+import 'package:dartproject/Components/pokemon_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +9,7 @@ class DataService {
   final ValueNotifier<List<dynamic>> tableStateNotifier = ValueNotifier([]);
   final ValueNotifier<List<String>> propertyNamesNotifier = ValueNotifier([]);
 
-  int limit = 20; // Quantidade inicial de itens a serem carregados
+  int limit = 10; // Quantidade inicial de itens a serem carregados
   int offset = 0; // Deslocamento inicial dos itens
 
   DataService() {
@@ -99,7 +99,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("PokeHome")),
+      appBar: AppBar(
+        title: const Text(
+          "Pokemon",
+          style: TextStyle(color: Colors.black),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       body: ValueListenableBuilder<List<dynamic>>(
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
@@ -109,11 +116,13 @@ class _HomeState extends State<Home> {
             );
           }
 
-          return ListView.builder(
+          return GridView.count(
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
-            itemCount: pokemons.length + 1,
-            itemBuilder: (context, index) {
+            crossAxisCount: 2,
+            crossAxisSpacing: 24,
+            mainAxisSpacing: 24,
+            children: List.generate(pokemons.length + 1, (index) {
               if (index == pokemons.length) {
                 return _isLoading
                     ? const Center(
@@ -123,41 +132,9 @@ class _HomeState extends State<Home> {
               }
 
               var pokemon = pokemons[index];
-              var pokemonImg = pokemon['sprites']['front_default'];
 
-              return Center(
-                child: Card(
-                  shape: const StadiumBorder(
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  margin: const EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Pokemon(pokemon: pokemon),
-                            ),
-                          );
-                        },
-                        title: Text(pokemon['name']),
-                        subtitle: Text(pokemon['id'].toString()),
-                        leading: Image(
-                          width: 100,
-                          height: 600,
-                          image: NetworkImage(pokemonImg),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
+              return PokemonCard(pokemon: pokemon);
+            }),
           );
         },
       ),
