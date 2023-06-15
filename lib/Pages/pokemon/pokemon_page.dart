@@ -64,19 +64,43 @@ class Pokemon extends StatelessWidget {
                           child: Table(
                             children: [
                               _newRow('id', pokemon['id']),
-                              _newRow(
-                                  'Habilidade',
-                                  pokemon['abilities']
-                                      .map((e) => e['ability']['name'])),
-                              _newRow(
-                                  'Tipo',
-                                  pokemon['types']
-                                      .map((e) => e['type']['name'])),
+                              if (pokemon['abilities'].length > 1)
+                                _newRow(
+                                    'Habilidade',
+                                    FirstLetterUp().toFirstUpperCase(
+                                            pokemon['abilities'][0]['ability']
+                                                ['name']) +
+                                        ", ".toString() +
+                                        FirstLetterUp().toFirstUpperCase(
+                                            pokemon['abilities'][1]['ability']
+                                                ['name'])),
+                              if (pokemon['abilities'].length == 1)
+                                _newRow(
+                                    'Habilidade',
+                                    FirstLetterUp().toFirstUpperCase(
+                                        pokemon['abilities'][0]['ability']
+                                            ['name'])),
+                              if (pokemon['types'].length > 1)
+                                _newRow(
+                                    'Tipo',
+                                    FirstLetterUp().toFirstUpperCase(
+                                            pokemon['types'][0]['type']
+                                                ['name']) +
+                                        ", ".toString() +
+                                        FirstLetterUp().toFirstUpperCase(
+                                            pokemon['types'][1]['type']
+                                                ['name'])),
+                              if (pokemon['types'].length == 1)
+                                _newRow(
+                                    'Tipo',
+                                    FirstLetterUp().toFirstUpperCase(
+                                        pokemon['types'][0]['type']['name'])),
                               _newRow('hp', pokemon['stats'][0]['base_stat']),
                               _newRow(
                                   'ataque', pokemon['stats'][1]['base_stat']),
-                              _newRow(
-                                  'defesa', pokemon['stats'][2]['base_stat']),
+                              if (pokemon['types'].length > 1)
+                                _newRow(
+                                    'defesa', pokemon['stats'][2]['base_stat']),
                               _newRow('ataque especial',
                                   pokemon['stats'][3]['base_stat']),
                               _newRow('defesa especial',
