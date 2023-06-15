@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart';
 import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
+import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -99,7 +100,14 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("PokeHome")),
+      appBar: AppBar(
+        title: const Text(
+          "Pokemon",
+          style: TextStyle(color: Colors.black),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white,
+      ),
       body: ValueListenableBuilder<List<dynamic>>(
         valueListenable: dataService.tableStateNotifier,
         builder: (context, pokemons, child) {
@@ -109,11 +117,13 @@ class _HomeState extends State<Home> {
             );
           }
 
-          return ListView.builder(
+          return GridView.count(
             controller: _scrollController,
             padding: const EdgeInsets.all(16),
-            itemCount: pokemons.length + 1,
-            itemBuilder: (context, index) {
+            crossAxisCount: 2,
+            crossAxisSpacing: 24,
+            mainAxisSpacing: 24,
+            children: List.generate(pokemons.length + 1, (index) {
               if (index == pokemons.length) {
                 return _isLoading
                     ? const Center(
@@ -123,41 +133,69 @@ class _HomeState extends State<Home> {
               }
 
               var pokemon = pokemons[index];
-              var pokemonImg = pokemon['sprites']['front_default'];
-
-              return Center(
-                child: Card(
-                  shape: const StadiumBorder(
-                    side: BorderSide(
-                      color: Colors.black,
-                      width: 1.0,
-                    ),
-                  ),
-                  margin: const EdgeInsets.all(16),
-                  child: Column(
-                    children: <Widget>[
-                      ListTile(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Pokemon(pokemon: pokemon),
-                            ),
-                          );
-                        },
-                        title: Text(pokemon['name']),
-                        subtitle: Text(pokemon['id'].toString()),
-                        leading: Image(
-                          width: 100,
-                          height: 600,
-                          image: NetworkImage(pokemonImg),
-                        ),
+              var pokemonImg = pokemon['sprites']['other']['official-artwork']
+                  ['front_default'];
+              var type = pokemon['types'][0]['type']['name'];
+              return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Pokemon(pokemon: pokemon),
                       ),
-                    ],
-                  ),
-                ),
-              );
-            },
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Types().pokemonColor(type).withOpacity(0.8)),
+                    child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(pokemon['name']),
+                                Text(pokemon['id'].toString())
+                              ],
+                            ),
+                            Row(
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 8),
+                                        child: Container(
+                                            margin: const EdgeInsets.only(
+                                                right: 10),
+                                            decoration: BoxDecoration(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.white
+                                                    .withOpacity(0.6)),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(6),
+                                              child: Text(pokemon['types'][0]
+                                                  ['type']['name']),
+                                            )))
+                                  ],
+                                ),
+                                Flexible(
+                                    child: Image(
+                                  image: NetworkImage(pokemonImg),
+                                  width: 100,
+                                ))
+                              ],
+                            )
+                          ],
+                        )),
+                  ));
+            }),
           );
         },
       ),
