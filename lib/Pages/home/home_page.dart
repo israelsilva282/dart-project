@@ -11,7 +11,7 @@ class DataService {
   final ValueNotifier<List<dynamic>> tableStateNotifier = ValueNotifier([]);
   final ValueNotifier<List<String>> propertyNamesNotifier = ValueNotifier([]);
 
-  int limit = 20; // Quantidade inicial de itens a serem carregados
+  int limit = 10; // Quantidade inicial de itens a serem carregados
   int offset = 0; // Deslocamento inicial dos itens
 
   DataService() {
@@ -170,23 +170,75 @@ class _HomeState extends State<Home> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 8),
-                                        child: Container(
-                                            margin: const EdgeInsets.only(
-                                                right: 10),
-                                            decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(10),
-                                                color: Colors.white
-                                                    .withOpacity(0.6)),
-                                            child: Padding(
-                                              padding: const EdgeInsets.all(6),
-                                              child: Text(FirstLetterUp()
-                                                  .toFirstUpperCase(
-                                                      pokemon['types'][0]
-                                                          ['type']['name'])),
-                                            )))
+                                        padding: const EdgeInsets.all(6),
+                                        child: Column(
+                                          children: [
+                                            if (pokemon['types'].length > 1)
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: Colors.white
+                                                              .withOpacity(
+                                                                  0.6)),
+                                                      child: Text(FirstLetterUp()
+                                                          .toFirstUpperCase(
+                                                              pokemon['types']
+                                                                          [0]
+                                                                      ['type']
+                                                                  ['name']))),
+                                                  Container(
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              top: 8),
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              8),
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                          color: Colors.white
+                                                              .withOpacity(
+                                                                  0.6)),
+                                                      child: Text(FirstLetterUp()
+                                                          .toFirstUpperCase(
+                                                              pokemon['types']
+                                                                          [0]
+                                                                      ['type']
+                                                                  ['name']))),
+                                                ],
+                                              )
+                                            else
+                                              Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 8),
+                                                  padding:
+                                                      const EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
+                                                      color: Colors.white
+                                                          .withOpacity(0.6)),
+                                                  child: Text(FirstLetterUp()
+                                                      .toFirstUpperCase(
+                                                          pokemon['types'][0]
+                                                                  ['type']
+                                                              ['name']))),
+                                          ],
+                                        ))
                                   ],
                                 ),
                                 Flexible(
