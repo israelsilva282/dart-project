@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.red),
       initialRoute: '/',
       routes: {
-        '/': (context) => const Home(),
+        '/': (context) => Home(),
         '/search': (context) => const Search(),
         '/pokemon': (context) => const Pokemon(pokemon: null)
       },

@@ -45,54 +45,27 @@ class DataService {
         }
       }
 
-      offset += limit; // Aumenta o deslocamento para carregar mais itens
-      tableStateNotifier.value +=
-          pokemons; // Adiciona os novos itens à lista existente
-    } else {
-      print(
-          'Falha ao carregar os pokémons. Código de status: ${response.statusCode}');
+      tableStateNotifier.value = [...tableStateNotifier.value, ...pokemons];
+      offset += limit; // Atualiza o deslocamento
     }
   }
 }
 
 final dataService = DataService();
 
-class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
-
-  @override
-  _HomeState createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
+class Home extends StatelessWidget {
   final ScrollController _scrollController = ScrollController();
-  bool _isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
+  Home({
+    super.key,
+  }) {
     _scrollController.addListener(_scrollListener);
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 
   void _scrollListener() {
     if (_scrollController.position.pixels ==
         _scrollController.position.maxScrollExtent) {
-      if (!_isLoading) {
-        setState(() {
-          _isLoading = true;
-        });
-        dataService.loadPokemons().then((_) {
-          setState(() {
-            _isLoading = false;
-          });
-        });
-      }
+      dataService.loadPokemons();
     }
   }
 
@@ -117,18 +90,16 @@ class _HomeState extends State<Home> {
           }
 
           return GridView.count(
-            controller: _scrollController,
             padding: const EdgeInsets.all(16),
             crossAxisCount: 2,
             crossAxisSpacing: 24,
             mainAxisSpacing: 24,
+            controller: _scrollController, // Adicione o controller de scroll
             children: List.generate(pokemons.length + 1, (index) {
               if (index == pokemons.length) {
-                return _isLoading
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : Container();
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               }
 
               var pokemon = pokemons[index];
