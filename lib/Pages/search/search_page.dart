@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:states_rebuilder/scr/state_management/extensions/type_extensions.dart';
 import 'package:states_rebuilder/scr/state_management/rm.dart';
 
 class Search extends ReactiveStatelessWidget {
-  const Search({super.key});
-
+  Search({super.key});
+  final text = "inicial".inj();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,20 +13,23 @@ class Search extends ReactiveStatelessWidget {
           elevation: 0,
           backgroundColor: Colors.white,
         ),
-        body: const Column(
+        body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             FractionallySizedBox(
               widthFactor: 0.8,
               child: TextField(
+                onChanged: (value) {
+                  text.state = value;
+                },
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     hintText: "Digite o nome do Pokémon...",
                     border: OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.black))),
               ),
             ),
-            Text("Test")
+            Text(text.state)
           ],
         ));
   }
