@@ -91,7 +91,7 @@ class Home extends StatelessWidget {
 
           return GridView.count(
             padding: const EdgeInsets.all(16),
-            crossAxisCount: 2,
+            crossAxisCount: (MediaQuery.of(context).size.width ~/ 160).toInt(),
             crossAxisSpacing: 24,
             mainAxisSpacing: 24,
             controller: _scrollController, // Adicione o controller de scroll
