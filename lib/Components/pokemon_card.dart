@@ -1,9 +1,10 @@
+import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
 import 'package:dartproject/Utils/first_letter_up.dart';
 import 'package:dartproject/Utils/myColors.dart';
 import 'package:flutter/material.dart';
 
 class PokemonCard extends StatelessWidget {
-  final pokemon;
+  final dynamic pokemon;
   const PokemonCard({super.key, required this.pokemon});
 
   @override
@@ -13,7 +14,7 @@ class PokemonCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => pokemon(pokemon: pokemon),
+              builder: (context) => Pokemon(pokemon: pokemon),
             ),
           );
         },

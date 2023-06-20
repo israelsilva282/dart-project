@@ -9,7 +9,7 @@ class DataService {
   final ValueNotifier<List<dynamic>> tableStateNotifier = ValueNotifier([]);
   final ValueNotifier<List<String>> propertyNamesNotifier = ValueNotifier([]);
 
-  int limit = 10; // Quantidade inicial de itens a serem carregados
+  int limit = 20; // Quantidade inicial de itens a serem carregados
   int offset = 0; // Deslocamento inicial dos itens
 
   DataService() {
