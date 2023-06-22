@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:dartproject/Components/pokemon_card.dart';
+import 'package:dartproject/Components/pokemon_search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:states_rebuilder/states_rebuilder.dart';
@@ -46,6 +46,7 @@ final pokemonRep = RM.inject(() => PokemonStateService());
 class Search extends ReactiveStatelessWidget {
   Search({super.key});
   final TextEditingController textEditingController = TextEditingController();
+  final pokemonObject = RM.inject(() => PokemonState());
 
   @override
   Widget build(BuildContext context) {
@@ -69,6 +70,8 @@ class Search extends ReactiveStatelessWidget {
                       String searchQuery =
                           textEditingController.text.toLowerCase();
                       await pokemonRep.state.searchPokemon(searchQuery);
+                      pokemonObject.state =
+                          pokemonRep.state.pokemonNotifier.state;
                     },
                     icon: const Icon(Icons.search)),
                 hintText: "Digite o nome do Pokémon...",
@@ -78,20 +81,19 @@ class Search extends ReactiveStatelessWidget {
               ),
             ),
           ),
-          if (pokemonRep.state.pokemonNotifier.state.status == 'none')
+          if (pokemonObject.state.status == 'none')
             const Center(
               heightFactor: 15,
               child: Text("Procure por um pokemon"),
             )
-          else if (pokemonRep.state.pokemonNotifier.state.status == 'ready')
-            PokemonCard(
-                pokemon: pokemonRep.state.pokemonNotifier.state.resultSingle)
-          else if (pokemonRep.state.pokemonNotifier.state.status == 'loading')
+          else if (pokemonObject.state.status == 'ready')
+            PokemonSearchCard(pokemon: pokemonObject.state.resultSingle)
+          else if (pokemonObject.state.status == 'loading')
             const Center(
               heightFactor: 15,
               child: CircularProgressIndicator(),
             )
-          else if (pokemonRep.state.pokemonNotifier.state.status == 'notFound')
+          else if (pokemonObject.state.status == 'notFound')
             const Center(
               heightFactor: 15,
               child: Text("Pokemon não encontrado"),

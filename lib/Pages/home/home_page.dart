@@ -75,10 +75,12 @@ class Home extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Pokemon",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.red,
       ),
       body: ValueListenableBuilder<List<dynamic>>(
         valueListenable: dataService.tableStateNotifier,
