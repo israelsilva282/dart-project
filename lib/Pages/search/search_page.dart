@@ -2,38 +2,49 @@ import 'dart:convert';
 import 'package:dartproject/Components/pokemon_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:states_rebuilder/scr/state_management/rm.dart';
+import 'package:states_rebuilder/states_rebuilder.dart';
 
-class PokemonModel {
-  final ValueNotifier tableStateNotifier =
-      ValueNotifier({'status': "none", 'result': null});
+class PokemonState {
+  final String status;
+  final Map<String, dynamic> resultSingle;
+
+  PokemonState({
+    this.status = '',
+    this.resultSingle = const {},
+  });
+}
+
+class PokemonStateService {
+  final pokemonNotifier = RM.inject(() => PokemonState(status: 'none'));
+
   Future<void> searchPokemon(var pkm) async {
     var pokeUri = Uri(
       scheme: 'https',
       host: 'pokeapi.co',
       path: 'api/v2/pokemon/$pkm',
     );
+    if (pkm != '') {
+      try {
+        pokemonNotifier.state = PokemonState(status: "loading");
+        var jsonString = await http.read(pokeUri);
+        var pokeJson = jsonDecode(jsonString);
 
-    try {
-      tableStateNotifier.value = {'status': "loading", 'result': null};
-      var jsonString = await http.read(pokeUri);
-      var pokeJson = jsonDecode(jsonString);
-
-      tableStateNotifier.value = {
-        'status': pokeJson != [] ? "ready" : "notFound",
-        'result': pokeJson
-      };
-    } catch (e) {
-      tableStateNotifier.value = {'status': "error", 'result': null};
+        pokemonNotifier.state = PokemonState(
+            status: pokeJson != {} ? "ready" : "notFound",
+            resultSingle: pokeJson);
+      } catch (e) {
+        pokemonNotifier.state = PokemonState(status: 'error');
+      }
+    } else {
+      pokemonNotifier.state = PokemonState(status: "notFound");
     }
   }
 }
 
-PokemonModel pkmModel = PokemonModel();
+final pokemonRep = RM.inject(() => PokemonStateService());
 
 class Search extends ReactiveStatelessWidget {
   Search({super.key});
-
   final TextEditingController textEditingController = TextEditingController();
 
   @override
@@ -57,10 +68,7 @@ class Search extends ReactiveStatelessWidget {
                     onPressed: () async {
                       String searchQuery =
                           textEditingController.text.toLowerCase();
-                      await pkmModel.searchPokemon(searchQuery);
-                      final dynamic jsonObject =
-                          pkmModel.tableStateNotifier.value;
-                      print(jsonObject['result']['name']);
+                      await pokemonRep.state.searchPokemon(searchQuery);
                     },
                     icon: const Icon(Icons.search)),
                 hintText: "Digite o nome do Pokémon...",
@@ -70,10 +78,24 @@ class Search extends ReactiveStatelessWidget {
               ),
             ),
           ),
-          if (pkmModel.tableStateNotifier.value['status'] == "ready")
-            PokemonCard(pokemon: pkmModel.tableStateNotifier.value['result'])
-          else
-            const Text("Procure por um pokemon")
+          if (pokemonRep.state.pokemonNotifier.state.status == 'none')
+            const Center(
+              heightFactor: 15,
+              child: Text("Procure por um pokemon"),
+            )
+          else if (pokemonRep.state.pokemonNotifier.state.status == 'ready')
+            PokemonCard(
+                pokemon: pokemonRep.state.pokemonNotifier.state.resultSingle)
+          else if (pokemonRep.state.pokemonNotifier.state.status == 'loading')
+            const Center(
+              heightFactor: 15,
+              child: CircularProgressIndicator(),
+            )
+          else if (pokemonRep.state.pokemonNotifier.state.status == 'notFound')
+            const Center(
+              heightFactor: 15,
+              child: Text("Pokemon não encontrado"),
+            )
         ],
       ),
     );
