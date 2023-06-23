@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:dartproject/Components/pokemon_search_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -9,13 +10,13 @@ class PokemonState {
   final Map<String, dynamic> resultSingle;
 
   PokemonState({
-    this.status = '',
+    this.status = 'none',
     this.resultSingle = const {},
   });
 }
 
 class PokemonStateService {
-  final pokemonNotifier = RM.inject(() => PokemonState(status: 'none'));
+  final pokemonNotifier = RM.inject(() => PokemonState());
 
   Future<void> searchPokemon(var pkm) async {
     var pokeUri = Uri(
@@ -29,11 +30,10 @@ class PokemonStateService {
         var jsonString = await http.read(pokeUri);
         var pokeJson = jsonDecode(jsonString);
 
-        pokemonNotifier.state = PokemonState(
-            status: pokeJson != {} ? "ready" : "notFound",
-            resultSingle: pokeJson);
+        pokemonNotifier.state =
+            PokemonState(status: 'ready', resultSingle: pokeJson);
       } catch (e) {
-        pokemonNotifier.state = PokemonState(status: 'error');
+        pokemonNotifier.state = PokemonState(status: 'notFound');
       }
     } else {
       pokemonNotifier.state = PokemonState(status: "notFound");
@@ -56,49 +56,59 @@ class Search extends ReactiveStatelessWidget {
         elevation: 0,
         backgroundColor: Colors.white,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          FractionallySizedBox(
-            widthFactor: 0.8,
-            child: TextField(
-              controller: textEditingController,
-              keyboardType: TextInputType.text,
-              decoration: InputDecoration(
-                icon: IconButton(
-                    onPressed: () async {
-                      String searchQuery =
-                          textEditingController.text.toLowerCase();
-                      await pokemonRep.state.searchPokemon(searchQuery);
-                      pokemonObject.state =
-                          pokemonRep.state.pokemonNotifier.state;
-                    },
-                    icon: const Icon(Icons.search)),
-                hintText: "Digite o nome do Pokémon...",
-                border: const OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: [
+              FractionallySizedBox(
+                widthFactor: 0.8,
+                child: TextField(
+                  controller: textEditingController,
+                  keyboardType: TextInputType.text,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                        onPressed: () async {
+                          String searchQuery =
+                              textEditingController.text.toLowerCase();
+                          await pokemonRep.state.searchPokemon(searchQuery);
+                          pokemonObject.state =
+                              pokemonRep.state.pokemonNotifier.state;
+                        },
+                        icon: const Icon(Icons.search)),
+                    hintText: "Digite o nome do Pokémon...",
+                    border: const OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                  ),
                 ),
               ),
-            ),
+              if (pokemonObject.state.status == 'none')
+                const Center(
+                  heightFactor: 15,
+                  child: Text("Procure por um pokemon"),
+                )
+              else if (pokemonObject.state.status == 'ready')
+                FractionallySizedBox(
+                  widthFactor: 0.8,
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
+                      margin: const EdgeInsets.only(top: 50),
+                      child: PokemonSearchCard(
+                          pokemon: pokemonObject.state.resultSingle)),
+                )
+              else if (pokemonObject.state.status == 'loading')
+                const Center(
+                  heightFactor: 15,
+                  child: CircularProgressIndicator(),
+                )
+              else if (pokemonObject.state.status == 'notFound')
+                const Center(
+                  heightFactor: 15,
+                  child: Text("Pokemon não encontrado"),
+                ),
+            ],
           ),
-          if (pokemonObject.state.status == 'none')
-            const Center(
-              heightFactor: 15,
-              child: Text("Procure por um pokemon"),
-            )
-          else if (pokemonObject.state.status == 'ready')
-            PokemonSearchCard(pokemon: pokemonObject.state.resultSingle)
-          else if (pokemonObject.state.status == 'loading')
-            const Center(
-              heightFactor: 15,
-              child: CircularProgressIndicator(),
-            )
-          else if (pokemonObject.state.status == 'notFound')
-            const Center(
-              heightFactor: 15,
-              child: Text("Pokemon não encontrado"),
-            )
-        ],
+        ),
       ),
     );
   }
