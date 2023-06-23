@@ -80,7 +80,6 @@ class Home extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-        backgroundColor: Colors.red,
       ),
       body: ValueListenableBuilder<List<dynamic>>(
         valueListenable: dataService.tableStateNotifier,

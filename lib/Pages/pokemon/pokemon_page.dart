@@ -57,7 +57,6 @@ class Pokemon extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.39,
                       ),
                       Container(
-                          height: MediaQuery.of(context).size.height * 0.5,
                           decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
