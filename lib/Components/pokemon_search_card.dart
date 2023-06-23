@@ -18,58 +18,42 @@ class PokemonSearchCard extends StatelessWidget {
             ),
           );
         },
-        child: Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: Types()
-                  .pokemonColor(pokemon['types'][0]['type']['name'])
-                  .withOpacity(0.8)),
-          child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        FirstLetterUp().toFirstUpperCase(pokemon['name']),
-                        style: const TextStyle(fontSize: 18),
-                      ),
-                      Text(pokemon['id'].toString())
-                    ],
+        child: Column(children: [
+          Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            child: Text(
+              "#${pokemon['id']} - ${FirstLetterUp().toFirstUpperCase(pokemon['name'])}",
+              style: const TextStyle(fontSize: 22),
+            ),
+          ),
+          Image(
+            image: NetworkImage(pokemon['sprites']['other']['official-artwork']
+                ['front_default']),
+            height: 200,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              for (var type in pokemon['types'])
+                Container(
+                  width: 100,
+                  height: 40,
+                  margin: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    color: Types()
+                        .pokemonColor(type['type']['name'].toString())
+                        .withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Row(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: pokemon['types']
-                                  .map<Widget>((e) => Container(
-                                      margin: const EdgeInsets.only(top: 8),
-                                      padding: const EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          color: Colors.white.withOpacity(0.6)),
-                                      child: Text(FirstLetterUp()
-                                          .toFirstUpperCase(
-                                              e['type']['name']))))
-                                  .toList())
-                        ],
-                      ),
-                      Flexible(
-                          child: Image(
-                        image: NetworkImage(pokemon['sprites']['other']
-                            ['official-artwork']['front_default']),
-                        width: 100,
-                      ))
-                    ],
-                  )
-                ],
-              )),
-        ));
+                  child: Center(
+                    child: Text(
+                      FirstLetterUp().toFirstUpperCase(type['type']['name']),
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                )
+            ],
+          )
+        ]));
   }
 }
