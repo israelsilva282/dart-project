@@ -97,11 +97,22 @@ class Home extends ReactiveStatelessWidget {
         itemCount:
             pokemonService.state.pokemonNotifier.state.resultList.length + 1,
         itemBuilder: (context, index) {
+          if (pokemonService.state.pokemonNotifier.state.status == "none") {
+            return Container(
+              margin: const EdgeInsets.all(10),
+              height: MediaQuery.of(context).size.height,
+              width: 200,
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
+            );
+          }
+
           if (index ==
               pokemonService.state.pokemonNotifier.state.resultList.length) {
             return Container(
+              width: 50,
               margin: const EdgeInsets.all(10),
-              width: 200,
               child: const Center(
                 child: LinearProgressIndicator(),
               ),
