@@ -15,7 +15,7 @@ class About extends StatelessWidget {
           child: Container(
         margin: const EdgeInsets.all(10),
         child: const Text(
-            "Este é um aplicativo de Pokedéx, utilizando a API PokéAPI, como parte de um projeto realizado na matéria de Programação Orientada a Objetos II, no curso de Sistemas de Informação.\n O aplicativo foi desenvolvido por:\n\n Israel Costa e Silva (israelsilva282)\n\n Isadora Luana (isazvdd)"),
+            "Este é um aplicativo de Pokedéx, utilizando a API PokéAPI, como parte de um projeto realizado na matéria de Programação Orientada a Objetos II, no curso de Sistemas de Informação.\n O aplicativo foi desenvolvido por:\n\n Israel Costa e Silva (israelsilva282)\n\n Isadora Luana Maria Gomes de Azevedo (isazvdd)"),
       )),
     );
   }
