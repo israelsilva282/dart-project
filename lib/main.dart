@@ -1,3 +1,4 @@
+import 'package:dartproject/Pages/about/about.dart';
 import 'package:dartproject/Pages/home/home_page.dart';
 import 'package:dartproject/Pages/pokemon/pokemon_page.dart';
 import 'package:dartproject/Pages/search/search_page.dart';
@@ -21,7 +22,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => Home(),
         '/search': (context) => Search(),
-        '/pokemon': (context) => const Pokemon(pokemon: null)
+        '/pokemon': (context) => const Pokemon(pokemon: null),
+        '/about': (context) => const About()
       },
     );
   }

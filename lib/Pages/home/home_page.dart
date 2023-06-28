@@ -82,10 +82,26 @@ class Home extends ReactiveStatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        actions: [
+          PopupMenuButton(
+            icon: const Icon(Icons.menu, color: Colors.black),
+            constraints: const BoxConstraints(minWidth: 100),
+            onSelected: (value) => Navigator.pushNamed(context, value),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                  value: '/about',
+                  child: ListTile(
+                    title: Text("Sobre"),
+                  ))
+            ],
+          )
+        ],
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
           "Pokemon",
           style: TextStyle(
-            color: Colors.white,
+            color: Colors.black,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -100,7 +116,7 @@ class Home extends ReactiveStatelessWidget {
           if (pokemonService.state.pokemonNotifier.state.status == "none") {
             return Container(
               margin: const EdgeInsets.all(10),
-              height: MediaQuery.of(context).size.height,
+              height: MediaQuery.of(context).size.height * 0.7,
               width: 200,
               child: const Center(
                 child: CircularProgressIndicator(),
@@ -114,7 +130,7 @@ class Home extends ReactiveStatelessWidget {
               width: 50,
               margin: const EdgeInsets.all(10),
               child: const Center(
-                child: LinearProgressIndicator(),
+                child: CircularProgressIndicator(),
               ),
             );
           }
@@ -125,7 +141,7 @@ class Home extends ReactiveStatelessWidget {
           return Center(
             child: Container(
                 margin: const EdgeInsets.all(10),
-                width: 200,
+                width: 250,
                 child: PokemonCard(pokemon: pokemon)),
           );
         },

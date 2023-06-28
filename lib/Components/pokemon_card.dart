@@ -36,10 +36,11 @@ class PokemonCard extends StatelessWidget {
                         FirstLetterUp().toFirstUpperCase(pokemon['name']),
                         style: const TextStyle(fontSize: 18),
                       ),
-                      Text(pokemon['id'].toString())
+                      Text("#${pokemon['id']}")
                     ],
                   ),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,

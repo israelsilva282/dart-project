@@ -39,6 +39,7 @@ class Pokemon extends StatelessWidget {
               Types().pokemonColor(pokemon['types'][0]['type']['name']),
         ),
         body: ListView(
+          physics: const BouncingScrollPhysics(),
           children: [
             Center(
               child: Container(
@@ -57,6 +58,7 @@ class Pokemon extends StatelessWidget {
                         height: MediaQuery.of(context).size.height * 0.39,
                       ),
                       Container(
+                          height: MediaQuery.of(context).size.height / 2,
                           decoration: const BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.only(
