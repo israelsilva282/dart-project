@@ -6,7 +6,11 @@ class About extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Sobre")),
+      appBar: AppBar(
+          foregroundColor: Colors.black,
+          backgroundColor: Colors.white,
+          elevation: 0,
+          title: const Text("Sobre")),
       body: Center(
           child: Container(
         margin: const EdgeInsets.all(10),
