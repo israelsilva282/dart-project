@@ -4,13 +4,22 @@ import 'package:dartproject/Components/bottomNavBar/bottomnavbar_component.dart'
 import 'package:dartproject/Components/pokemon_card.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:states_rebuilder/states_rebuilder.dart';
+
+class PokemonState {
+  final String status;
+  final dynamic resultList;
+
+  PokemonState({
+    this.status = 'none',
+    this.resultList = const [],
+  });
+}
 
 class DataService {
-  final ValueNotifier<List<dynamic>> tableStateNotifier = ValueNotifier([]);
-  final ValueNotifier<List<String>> propertyNamesNotifier = ValueNotifier([]);
-
-  int limit = 20; // Quantidade inicial de itens a serem carregados
-  int offset = 0; // Deslocamento inicial dos itens
+  final pokemonNotifier = RM.inject(() => PokemonState());
+  //final limit = RM.inject(() => 20);
+  int limit = 20;
 
   DataService() {
     loadPokemons();
@@ -23,20 +32,17 @@ class DataService {
       path: 'api/v2/pokemon/',
       queryParameters: {
         'limit': limit.toString(),
-        'offset': offset.toString(),
+        'offset': "0",
       },
     );
 
-    var response = await http.get(pokeUri);
-
-    if (response.statusCode == 200) {
-      var pokeJson = jsonDecode(response.body);
-
-      var pokemonList = pokeJson['results'];
+    try {
+      var jsonString = await http.read(pokeUri);
+      var pokeJson = jsonDecode(jsonString);
 
       var pokemons = <dynamic>[];
 
-      for (var pokemon in pokemonList) {
+      for (var pokemon in pokeJson['results']) {
         var pokemonUri = Uri.parse(pokemon['url']);
         var pokemonResponse = await http.get(pokemonUri);
         if (pokemonResponse.statusCode == 200) {
@@ -45,75 +51,76 @@ class DataService {
         }
       }
 
-      tableStateNotifier.value = [...tableStateNotifier.value, ...pokemons];
-      offset += limit; // Atualiza o deslocamento
+      //limit.state += limit.state;
+      limit += 20;
+
+      pokemonNotifier.state =
+          PokemonState(status: 'ready', resultList: pokemons);
+    } catch (e) {
+      pokemonNotifier.state = PokemonState(status: 'notFound');
     }
   }
 }
 
-final dataService = DataService();
+final pokemonService = RM.inject(() => DataService());
 
-class Home extends StatelessWidget {
-  final ScrollController _scrollController = ScrollController();
-
+class Home extends ReactiveStatelessWidget {
   Home({
     super.key,
-  }) {
-    _scrollController.addListener(_scrollListener);
-  }
+  });
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      dataService.loadPokemons();
-    }
-  }
-
+  final scroll = RM.injectScrolling(
+      initialScrollOffset: 0.0,
+      keepScrollOffset: true,
+      endScrollDelay: 300,
+      onScrolling: (scroll) {
+        if (scroll.hasReachedMaxExtent) {
+          pokemonService.state.loadPokemons();
+        }
+      });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
           "Pokemon",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-        elevation: 0,
-        backgroundColor: Colors.white,
       ),
-      body: ValueListenableBuilder<List<dynamic>>(
-        valueListenable: dataService.tableStateNotifier,
-        builder: (context, pokemons, child) {
-          if (pokemons.isEmpty) {
-            return const Center(
-              child: CircularProgressIndicator(),
+      body: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: const EdgeInsets.all(16),
+        controller: scroll.controller,
+        itemCount:
+            pokemonService.state.pokemonNotifier.state.resultList.length + 1,
+        itemBuilder: (context, index) {
+          if (index ==
+              pokemonService.state.pokemonNotifier.state.resultList.length) {
+            return Container(
+              margin: const EdgeInsets.all(10),
+              width: 200,
+              child: const Center(
+                child: LinearProgressIndicator(),
+              ),
             );
           }
 
-          return GridView.count(
-            padding: const EdgeInsets.all(16),
-            crossAxisCount: (MediaQuery.of(context).size.width ~/ 160).toInt(),
-            crossAxisSpacing: 24,
-            mainAxisSpacing: 24,
-            controller: _scrollController, // Adicione o controller de scroll
-            children: List.generate(pokemons.length + 1, (index) {
-              if (index == pokemons.length) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
+          var pokemon =
+              pokemonService.state.pokemonNotifier.state.resultList[index];
 
-              var pokemon = pokemons[index];
-
-              return PokemonCard(pokemon: pokemon);
-            }),
+          return Center(
+            child: Container(
+                margin: const EdgeInsets.all(10),
+                width: 200,
+                child: PokemonCard(pokemon: pokemon)),
           );
         },
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
-      floatingActionButton: const Padding(
-        padding: EdgeInsets.only(bottom: 10),
-        child: MyBottomNavbar(),
-      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: const MyBottomNavbar(),
     );
   }
 }
