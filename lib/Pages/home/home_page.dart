@@ -119,7 +119,7 @@ class Home extends ReactiveStatelessWidget {
               height: MediaQuery.of(context).size.height * 0.7,
               width: 200,
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: LinearProgressIndicator(),
               ),
             );
           }
@@ -130,7 +130,7 @@ class Home extends ReactiveStatelessWidget {
               width: 50,
               margin: const EdgeInsets.all(10),
               child: const Center(
-                child: CircularProgressIndicator(),
+                child: LinearProgressIndicator(),
               ),
             );
           }
